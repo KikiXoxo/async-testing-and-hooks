@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { generateToken } from './async-example';
+import { generateToken, generateTokenPromise } from './async-example';
 
 // it('should generate a token value', () => {
 //   const testUserEmail = 'test@test.com';
@@ -46,3 +46,22 @@ it('should generate a token value', done => {
 
 // try/catch is needed specifically to be able to catch errors in instances in which your test might fail. Without it, if a test failed eg when we set our assertion as expect(token).toBe(2), it would show as failed, but we would only see a timeout error is why, not the real cause
 // So doing it this way makes seure any error is caught by the catch block, and then done(err) forwards that error to Vitest, so the test shows as failed, and with the correct reason
+
+// Testing code with promises
+// 1.
+it('should generate a token value', () => {
+  const testUserEmail = 'test@test.com';
+
+  return expect(generateTokenPromise(testUserEmail)).resolves.toBeDefined();
+});
+
+// 2.
+it('should generate a token value', async () => {
+  const testUserEmail = 'test@test.com';
+
+  const token = await generateTokenPromise(testUserEmail);
+
+  expect(token).toBeDefined();
+});
+// Both methods above work for when you are dealing with promises. you can either uses .resolves, or async/await. These are preferred over the initial callback one
+// Also remember if you use the .resolves method, you must return the promise assertion. No need when you are using the async/await method though, as any function annoated with async returns a promise implicitly
